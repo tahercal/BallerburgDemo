@@ -83,19 +83,14 @@ public class BulletTerraformingPhysic : MonoBehaviour
                 continue;
 
             //Get hit pixels
-            PixelCoor[] hitPixels = this.GetTerrainHitPixels(_spriteRenderer.sprite, _modifiableTexture, temporaryCircleBullet.CircleCollider2D);
-
-            if (hitPixels != null)
+            foreach (PixelCoor pixelCoor in this.GetTerrainHitPixels(_spriteRenderer.sprite, _modifiableTexture, temporaryCircleBullet.CircleCollider2D))
             {
-                foreach (PixelCoor pixelCoor in hitPixels)
-                {
-                    Color pixelColor = _modifiableTexture.GetPixel(pixelCoor.x, pixelCoor.y);
-                    pixelColor.a = 0;
-                    _modifiableTexture.SetPixel(pixelCoor.x, pixelCoor.y, pixelColor);
-                }
-
-                _modifiableTexture.Apply();
+                Color pixelColor = _modifiableTexture.GetPixel(pixelCoor.x, pixelCoor.y);
+                pixelColor.a = 0;
+                _modifiableTexture.SetPixel(pixelCoor.x, pixelCoor.y, pixelColor);
             }
+
+            _modifiableTexture.Apply();
         }
 
     }
@@ -124,7 +119,7 @@ public class BulletTerraformingPhysic : MonoBehaviour
     #endregion
 
     #region Privates
-    PixelCoor[] GetTerrainHitPixels(Sprite terrainSprite, Texture2D terrainTexture2D, CircleCollider2D circleCollider2D)
+    List<PixelCoor> GetTerrainHitPixels(Sprite terrainSprite, Texture2D terrainTexture2D, CircleCollider2D circleCollider2D)
     {
         List<PixelCoor> hitPixels = new List<PixelCoor>();
         
@@ -154,7 +149,7 @@ public class BulletTerraformingPhysic : MonoBehaviour
             }
         }
 
-        return hitPixels.Count > 0 ? hitPixels.ToArray() : null;
+        return hitPixels;
     }
     #endregion
 }
