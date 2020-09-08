@@ -17,8 +17,8 @@ public class BallMovement : MonoBehaviour
     public float angle;
     */
 
-    public Rigidbody2D Rigidbody2D { get; private set; }
-    public CircleCollider2D CircleCollider2D { get; private set; }
+    public Rigidbody2D Rigidbody2D { get; private set; } = null;
+    public CircleCollider2D CircleCollider2D { get; private set; } = null;
 
     //private float velocity;
 
