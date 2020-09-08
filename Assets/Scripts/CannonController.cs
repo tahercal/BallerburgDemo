@@ -4,39 +4,59 @@ using UnityEngine;
 
 public class CannonController : MonoBehaviour
 {
+    //Accessibility Restriction
     [Header("Parameters")]
     [Range(25,90)]
-    public float angle;
-    public float force;
+    [SerializeField]
+    private float angle;
+    [SerializeField]
+    private float force;
 
     [Header("References")]
+
     [SerializeField]
     private Transform cannon_Body;
+
     [SerializeField]
     private Transform ball_SpawnPoint;
 
     [Header("Prefabs")]
-    public GameObject cannonBall;
+    [SerializeField]
+    private BallMovement cannonBall = null;
 
 
     private void Update()
     {
-        if(Input.GetKeyDown(KeyCode.Space))
-        {
-            Debug.Log("Space pressed");
+        //Security Check
+        if (!cannon_Body)
+            return;
 
-            GameObject ballSpawned = Instantiate(cannonBall, ball_SpawnPoint);
+        cannon_Body.rotation = Quaternion.Euler(0f, 0f, angle);
+
+        if (cannonBall && ball_SpawnPoint &&  Input.GetKeyDown(KeyCode.Space)) // Increase security
+        {
+            //Debug.Log("Space pressed");
+
+            BallMovement cannonBallInstance = Instantiate<BallMovement>(cannonBall, ball_SpawnPoint);
+            if (cannonBallInstance.Rigidbody2D != null)
+                cannonBallInstance.Rigidbody2D.AddForce(cannon_Body.transform.right * force, ForceMode2D.Impulse);
+
+            /*
             ballSpawned.GetComponent<BallMovement>().force = this.force;
             ballSpawned.GetComponent<BallMovement>().angle = this.angle;
+        */
         }
     }
 
 
-    void FixedUpdate()
+    //Switch to update (not physic based)
+    /*
+    private void Update() 
     {
         if (cannon_Body != null)
         {
             cannon_Body.rotation = Quaternion.Euler(0f, 0f, angle);
         }
     }
+    */
 }

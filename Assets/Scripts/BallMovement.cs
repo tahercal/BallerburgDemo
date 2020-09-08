@@ -1,24 +1,46 @@
-﻿using System.Collections;
-using System.Collections.Generic;
-using UnityEngine;
+﻿using UnityEngine;
 
+[RequireComponent(typeof(CircleCollider2D))]
+[RequireComponent(typeof(Rigidbody2D))]
 public class BallMovement : MonoBehaviour
 {
-    [Header("References")]
-    public SpriteRenderer ballSprite;
-    public Rigidbody2D rigidbody;
+    #region Const strings
+    private const string ERROR_NORIGIDBODY = "No Rigidbody found on this GameObject";
+    private const string ERROR_NOCIRCLECOLLIDER2D = "No CircleCollider2D found on this GameObject";
+    #endregion
 
+    //Cannon Responsability
+    /*
+    //Adaptation for scripts and access security
     [Header("Parameters")]
     public float force;
     public float angle;
+    */
 
-    private float velocity;
+    public Rigidbody2D Rigidbody2D { get; private set; }
+    public CircleCollider2D CircleCollider2D { get; private set; }
 
-    private void Start()
+    //private float velocity;
+
+    //Get variales
+    private void Awake()
     {
-        rigidbody.AddForce(transform.right * force * Time.deltaTime, ForceMode2D.Impulse);
+        this.Rigidbody2D = gameObject.GetComponent<Rigidbody2D>();
+        if (!this.Rigidbody2D)
+            Debug.LogError(ERROR_NORIGIDBODY);
+
+        this.CircleCollider2D = gameObject.GetComponent<CircleCollider2D>();
+        if (!this.CircleCollider2D)
+            Debug.LogError(ERROR_NOCIRCLECOLLIDER2D);
     }
 
+    //Cannon Responsability
+    /*
+    private void Start()
+    {
+        Rigidbody2D.AddForce(transform.right * force * Time.deltaTime, ForceMode2D.Impulse);
+    }
+    */
     private void OnTriggerEnter2D(Collider2D collision)
     {
         Debug.Log("Ball triggered with an object, destroy ball");
