@@ -29,15 +29,18 @@ public class BulletTerraformingPhysic : MonoBehaviour
     #endregion
 
     #region Variables
-    [SerializeField] private Color terrainColor = Color.black;
-    [SerializeField][Range(0.1f, 100f)] private float forceAppliedPerPixel = 1f;
+    [SerializeField][Range(0.1f, 100f)] private float decelerationSpeedPerPixel = 1f;
 
-    private List<TemporaryCircleBullet> _currentBullets = new List<TemporaryCircleBullet>();
+    private List<BallMovement> _currentBullets = new List<BallMovement>();
+
     private SpriteRenderer _spriteRenderer = null;
     private Texture2D _modifiableTexture = null;
     #endregion
 
     #region Life cycle
+    /// <summary>
+    /// Security checks and components initialization
+    /// </summary>
     private void Awake()
     {
         if (transform.lossyScale != Vector3.one)
@@ -53,14 +56,6 @@ public class BulletTerraformingPhysic : MonoBehaviour
                     _modifiableTexture = GameObject.Instantiate<Texture2D>(_spriteRenderer.sprite.texture);
                     block.SetTexture(SHADERATTRIBUTE_TEXTURE, _modifiableTexture);
                     _spriteRenderer.SetPropertyBlock(block);
-
-                    //Set Color
-                    for(int i = 0; i < _modifiableTexture.width; i++)
-                    {
-                        for (int j = 0; j < _modifiableTexture.height; j++)
-                            _modifiableTexture.SetPixel(i, j, terrainColor);
-                    }
-                    _modifiableTexture.Apply();
                 }
                 else
                     Debug.LogError(ERROR_NOTEXTURE2D, gameObject);
@@ -72,22 +67,44 @@ public class BulletTerraformingPhysic : MonoBehaviour
             Debug.LogError(ERROR_NOSPRITERENDERER, gameObject);
     }
 
+    /// <summary>
+    /// Check bullets which are colliding with the terrain and modify terrain pixel to alpha on hitting zones
+    /// Change ball velocity
+    /// </summary>
     private void Update()
     {
         if (_currentBullets.Count == 0 || !_spriteRenderer || !_spriteRenderer.sprite || !_modifiableTexture)
             return;
 
-        foreach (TemporaryCircleBullet temporaryCircleBullet in _currentBullets)
+        for (int i = 0; i < _currentBullets.Count; i++)
         {
-            if (!temporaryCircleBullet || !temporaryCircleBullet.CircleCollider2D)
+            if (!_currentBullets[i] || !_currentBullets[i].CircleCollider2D)
                 continue;
 
+            List<PixelCoor> pixelsCoor = this.GetTerrainHitPixels(_spriteRenderer.sprite, _modifiableTexture, _currentBullets[i].CircleCollider2D);
+            int nonAlphaPixelCount = 0;
+
             //Get hit pixels
-            foreach (PixelCoor pixelCoor in this.GetTerrainHitPixels(_spriteRenderer.sprite, _modifiableTexture, temporaryCircleBullet.CircleCollider2D))
+            foreach(PixelCoor pixelCoor in pixelsCoor)
             {
                 Color pixelColor = _modifiableTexture.GetPixel(pixelCoor.x, pixelCoor.y);
-                pixelColor.a = 0;
-                _modifiableTexture.SetPixel(pixelCoor.x, pixelCoor.y, pixelColor);
+
+                if (pixelColor.a > 0)
+                {
+                    pixelColor.a = 0;
+                    _modifiableTexture.SetPixel(pixelCoor.x, pixelCoor.y, pixelColor);
+                    nonAlphaPixelCount++;
+                }
+            }
+
+            //Change velocity in update (frame dependency) to avoid to store hit pixel and iterate an other list in FixedUpdate
+            if(nonAlphaPixelCount > 0 && _currentBullets[i].Rigidbody2D)
+            {
+                Vector2 newVelocity = Vector2.MoveTowards(_currentBullets[i].Rigidbody2D.velocity, Vector2.zero, decelerationSpeedPerPixel * nonAlphaPixelCount * Time.deltaTime);
+
+                _currentBullets[i].Rigidbody2D.velocity = newVelocity;
+                if (newVelocity == Vector2.zero)
+                    _currentBullets[i].Rigidbody2D.isKinematic = true;
             }
 
             _modifiableTexture.Apply();
@@ -103,18 +120,18 @@ public class BulletTerraformingPhysic : MonoBehaviour
     #region Triggers
     private void OnTriggerEnter2D(Collider2D collision)
     {
-        TemporaryCircleBullet triggeredCircleBullet = null;
+        BallMovement ballMovement = null;
 
-        if (collision && collision.TryGetComponent<TemporaryCircleBullet>(out triggeredCircleBullet) && !_currentBullets.Contains(triggeredCircleBullet))
-            _currentBullets.Add(triggeredCircleBullet);
+        if (collision && collision.TryGetComponent<BallMovement>(out ballMovement) && !_currentBullets.Contains(ballMovement))
+            _currentBullets.Add(ballMovement);
     }
 
     private void OnTriggerExit2D(Collider2D collision)
     {
-        TemporaryCircleBullet triggeredCircleBullet = null;
+        BallMovement ballMovement = null;
 
-        if (collision && collision.TryGetComponent<TemporaryCircleBullet>(out triggeredCircleBullet) && _currentBullets.Contains(triggeredCircleBullet))
-            _currentBullets.Remove(triggeredCircleBullet);
+        if (collision && collision.TryGetComponent<BallMovement>(out ballMovement) && _currentBullets.Contains(ballMovement))
+            _currentBullets.Remove(ballMovement);
     }
     #endregion
 

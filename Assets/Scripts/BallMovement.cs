@@ -41,9 +41,13 @@ public class BallMovement : MonoBehaviour
         Rigidbody2D.AddForce(transform.right * force * Time.deltaTime, ForceMode2D.Impulse);
     }
     */
+
+    //If destroyed, can't do any terraforming
+    /*
     private void OnTriggerEnter2D(Collider2D collision)
     {
         Debug.Log("Ball triggered with an object, destroy ball");
         Destroy(gameObject);
     }
+    */
 }

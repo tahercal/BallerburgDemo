@@ -37,7 +37,7 @@ public class CannonController : MonoBehaviour
         {
             //Debug.Log("Space pressed");
 
-            BallMovement cannonBallInstance = Instantiate<BallMovement>(cannonBall, ball_SpawnPoint);
+            BallMovement cannonBallInstance = Instantiate<BallMovement>(cannonBall, ball_SpawnPoint.position, transform.rotation);
             if (cannonBallInstance.Rigidbody2D != null)
                 cannonBallInstance.Rigidbody2D.AddForce(cannon_Body.transform.right * force, ForceMode2D.Impulse);
 
