@@ -5,7 +5,7 @@ using UnityEngine;
 public class CannonController : MonoBehaviour
 {
     [Header("Parameters")]
-    [Range(25,75)]
+    [Range(25,90)]
     public float angle;
     public float force;
 

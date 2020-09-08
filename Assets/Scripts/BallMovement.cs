@@ -12,16 +12,16 @@ public class BallMovement : MonoBehaviour
     public float force;
     public float angle;
 
-
-    private Vector2 direction;
+    private float velocity;
 
     private void Start()
     {
-        direction = new Vector2(0f, angle);
+        rigidbody.AddForce(transform.right * force * Time.deltaTime, ForceMode2D.Impulse);
     }
 
-    private void FixedUpdate()
+    private void OnTriggerEnter2D(Collider2D collision)
     {
-        rigidbody.AddForce(direction * Time.deltaTime, ForceMode2D.Impulse);
+        Debug.Log("Ball triggered with an object, destroy ball");
+        Destroy(gameObject);
     }
 }
