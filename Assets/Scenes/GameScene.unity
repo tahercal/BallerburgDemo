@@ -457,7 +457,7 @@ BoxCollider2D:
   m_Enabled: 1
   m_Density: 1
   m_Material: {fileID: 0}
-  m_IsTrigger: 0
+  m_IsTrigger: 1
   m_UsedByEffector: 0
   m_UsedByComposite: 0
   m_Offset: {x: 0.64, y: 0.32}
@@ -523,6 +523,7 @@ MonoBehaviour:
   rotationSpeed: 50
   forceTimeMultiplicator: 20
   maxHandledFireTime: 1
+  minimumForce: 5
   cannon_Body: {fileID: 165488884}
   ball_SpawnPoint: {fileID: 735122764}
   cannonBall: {fileID: 3083395325948624661, guid: 7cb5da2781be9f448b20185d1122d6ca, type: 3}
@@ -737,6 +738,7 @@ MonoBehaviour:
   rotationSpeed: 50
   forceTimeMultiplicator: 20
   maxHandledFireTime: 1
+  minimumForce: 5
   cannon_Body: {fileID: 598423611}
   ball_SpawnPoint: {fileID: 764767829}
   cannonBall: {fileID: 3083395325948624661, guid: 7cb5da2781be9f448b20185d1122d6ca, type: 3}
@@ -771,7 +773,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 6bc59da1dc1585d4985c0d99505b9624, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  decelerationSpeedPerPixel: 25
+  decelerationSpeedPerPixel: 35
 --- !u!212 &1404192186
 SpriteRenderer:
   m_ObjectHideFlags: 0
@@ -831,7 +833,7 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1404192184}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 0.83, y: -10.07, z: 0}
+  m_LocalPosition: {x: -0.21, y: -10.87, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children: []
   m_Father: {fileID: 0}

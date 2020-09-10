@@ -155,11 +155,11 @@ public class BulletTerraformingPhysic : MonoBehaviour
             maxCircleBulletRadiusLimitInTerrain.x = Mathf.Clamp(maxCircleBulletRadiusLimitInTerrain.x, 0, terrainTexture2D.width);
             maxCircleBulletRadiusLimitInTerrain.y = Mathf.Clamp(maxCircleBulletRadiusLimitInTerrain.y, 0, terrainTexture2D.height);
 
-            for (int i = Mathf.FloorToInt(minCircleBulletRadiusLimitInTerrain.x); i < Mathf.FloorToInt(maxCircleBulletRadiusLimitInTerrain.x); i++)
+            for (int i = (int)minCircleBulletRadiusLimitInTerrain.x; i < (int)maxCircleBulletRadiusLimitInTerrain.x; i++)
             {
-                for (int j = Mathf.FloorToInt(minCircleBulletRadiusLimitInTerrain.y); j < Mathf.FloorToInt(maxCircleBulletRadiusLimitInTerrain.y); j++)
+                for (int j = (int)minCircleBulletRadiusLimitInTerrain.y; j < (int)maxCircleBulletRadiusLimitInTerrain.y; j++)
                 {
-                    Vector2 pixelWorldPosition = ((Vector2)transform.position) + (new Vector2(i , j) - terrainSprite.pivot) / terrainSprite.pixelsPerUnit;
+                    Vector2 pixelWorldPosition = transform.TransformPoint((new Vector2(i, j) - terrainSprite.pivot)/ terrainSprite.pixelsPerUnit);
                     if(Vector2.Distance(circleCollider2D.transform.position, pixelWorldPosition) <= maxDistancePixelCircleBulletCollider)
                         hitPixels.Add(new PixelCoor(i, j));
                 }

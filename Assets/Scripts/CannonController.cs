@@ -22,10 +22,12 @@ public class CannonController : MonoBehaviour
     private float angle;
     [SerializeField] [Range(0.1f, 100f)] float rotationSpeed = 1f;
     [SerializeField][Range(1f, 100f)]
-    private float forceTimeMultiplicator;
+    private float forceTimeMultiplicator = 1f;
     [SerializeField]
     [Range(1f, 100f)]
     private float maxHandledFireTime = 5f;
+    [SerializeField]
+    [Range(1f, 100f)] private float minimumForce = 1f;
 
     [Header("References")]
 
@@ -127,8 +129,12 @@ public class CannonController : MonoBehaviour
                 if ((firedTime > maxHandledFireTime) || Input.GetKeyUp(fireKey))
                 {
                     BallMovement cannonBallInstance = Instantiate<BallMovement>(cannonBall, ball_SpawnPoint.position, transform.rotation);
+                    float force = forceTimeMultiplicator * firedTime;
+                    if (force < minimumForce)
+                        force = minimumForce;
+
                     if (cannonBallInstance.Rigidbody2D != null)
-                        cannonBallInstance.Rigidbody2D.AddForce(cannon_Body.transform.right * forceTimeMultiplicator * (firedTime), ForceMode2D.Impulse);
+                        cannonBallInstance.Rigidbody2D.AddForce(cannon_Body.transform.right * force, ForceMode2D.Impulse);
 
                     _fireKeyDown = false;
                     /*
