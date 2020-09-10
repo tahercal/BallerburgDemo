@@ -692,6 +692,14 @@ PrefabInstance:
       propertyPath: dieText
       value: 
       objectReference: {fileID: 1260239593}
+    - target: {fileID: 4287280672676332749, guid: c254b5d4fc98aff4da497912c003f58c, type: 3}
+      propertyPath: decelerationSpeedPerPixel
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 4287280672676332749, guid: c254b5d4fc98aff4da497912c003f58c, type: 3}
+      propertyPath: alphaPixelsBeforeDie
+      value: 1500
+      objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: c254b5d4fc98aff4da497912c003f58c, type: 3}
 --- !u!4 &802677856 stripped
@@ -1555,6 +1563,14 @@ PrefabInstance:
       propertyPath: dieText
       value: 
       objectReference: {fileID: 1260239593}
+    - target: {fileID: 4287280672676332749, guid: c254b5d4fc98aff4da497912c003f58c, type: 3}
+      propertyPath: decelerationSpeedPerPixel
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 4287280672676332749, guid: c254b5d4fc98aff4da497912c003f58c, type: 3}
+      propertyPath: alphaPixelsBeforeDie
+      value: 1500
+      objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: c254b5d4fc98aff4da497912c003f58c, type: 3}
 --- !u!1 &1974714817
@@ -1751,5 +1767,13 @@ PrefabInstance:
       propertyPath: dieText
       value: 
       objectReference: {fileID: 1260239593}
+    - target: {fileID: 4287280672676332749, guid: c254b5d4fc98aff4da497912c003f58c, type: 3}
+      propertyPath: decelerationSpeedPerPixel
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 4287280672676332749, guid: c254b5d4fc98aff4da497912c003f58c, type: 3}
+      propertyPath: alphaPixelsBeforeDie
+      value: 1500
+      objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: c254b5d4fc98aff4da497912c003f58c, type: 3}
