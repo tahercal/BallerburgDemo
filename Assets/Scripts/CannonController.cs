@@ -1,6 +1,7 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.Events;
 using UnityEngine.SocialPlatforms;
 
 public class CannonController : MonoBehaviour
@@ -11,6 +12,10 @@ public class CannonController : MonoBehaviour
     #endregion
 
     //Accessibility Restriction
+    [Header("Player")]
+    [SerializeField] private Color playerColor = Color.blue;
+    [SerializeField] private string name = "";
+
     [Header("Controls")]
     [SerializeField] private KeyCode upKey = KeyCode.W;
     [SerializeField] private KeyCode downKey = KeyCode.S;
@@ -21,7 +26,7 @@ public class CannonController : MonoBehaviour
     [SerializeField]
     private float angle;
     [SerializeField] [Range(0.1f, 100f)] float rotationSpeed = 1f;
-    [SerializeField][Range(1f, 100f)]
+    [SerializeField] [Range(1f, 100f)]
     private float forceTimeMultiplicator = 1f;
     [SerializeField]
     [Range(1f, 100f)]
@@ -49,6 +54,15 @@ public class CannonController : MonoBehaviour
     private bool _fireKeyDown = false;
     private float _startFireTime = 0;
 
+    #region Publics
+    public string Name { 
+        get { return name; }
+        set { name = value; }
+    }
+    public bool IsControllable { get; set; } = false;
+    public readonly UnityEvent<BallMovement> OnFire = new UnityEvent<BallMovement>(); 
+    #endregion
+
     #region Life Cycle
     /// <summary>
     /// Check angle settings
@@ -70,11 +84,17 @@ public class CannonController : MonoBehaviour
 
         if (cannon_Body)
             _originalRotation = cannon_Body.rotation;
+
+        foreach(SpriteRenderer sprite in gameObject.GetComponentsInChildren<SpriteRenderer>())
+        {
+            if (sprite)
+                sprite.color = playerColor;
+        }
     }
 
     private void Update()
     {
-        if (!cannon_Body)
+        if (!cannon_Body || !this.IsControllable)
             return;
 
         this.Rotate();
@@ -136,6 +156,8 @@ public class CannonController : MonoBehaviour
                     if (cannonBallInstance.Rigidbody2D != null)
                         cannonBallInstance.Rigidbody2D.AddForce(cannon_Body.transform.right * force, ForceMode2D.Impulse);
 
+                    this.OnFire.Invoke(cannonBallInstance);
+
                     _fireKeyDown = false;
                     /*
                     ballSpawned.GetComponent<BallMovement>().force = this.force;
@@ -155,6 +177,10 @@ public class CannonController : MonoBehaviour
         angle = Mathf.Clamp(angle, angleClamp.x, angleClamp.y);
         cannon_Body.rotation = Quaternion.Euler(cannon_Body.rotation * Vector3.forward * angle) * _originalRotation;
     }
+    #endregion
+
+    #region Publics
+    public Color PlayerColor { get { return playerColor; } }
     #endregion
 
     //Switch to update (not physic based)

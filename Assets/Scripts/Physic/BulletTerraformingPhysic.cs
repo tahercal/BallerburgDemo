@@ -35,13 +35,14 @@ public class BulletTerraformingPhysic : MonoBehaviour
 
     private SpriteRenderer _spriteRenderer = null;
     private Texture2D _modifiableTexture = null;
+    private int alphaPixels = 0;
     #endregion
 
     #region Life cycle
     /// <summary>
     /// Security checks and components initialization
     /// </summary>
-    private void Awake()
+    virtual protected void Awake()
     {
         if (transform.lossyScale != Vector3.one)
             Debug.LogWarning(WARNING_INVALIDSCALE, gameObject);
@@ -71,7 +72,7 @@ public class BulletTerraformingPhysic : MonoBehaviour
     /// Check bullets which are colliding with the terrain and modify terrain pixel to alpha on hitting zones
     /// Change ball velocity
     /// </summary>
-    private void Update()
+    virtual protected void Update()
     {
         if (_currentBullets.Count == 0 || !_spriteRenderer || !_spriteRenderer.sprite || !_modifiableTexture)
             return;
@@ -107,6 +108,8 @@ public class BulletTerraformingPhysic : MonoBehaviour
                     _currentBullets[i].Rigidbody2D.isKinematic = true;
             }
 
+            alphaPixels += nonAlphaPixelCount;
+
             _modifiableTexture.Apply();
         }
 
@@ -133,6 +136,10 @@ public class BulletTerraformingPhysic : MonoBehaviour
         if (collision && collision.TryGetComponent<BallMovement>(out ballMovement) && _currentBullets.Contains(ballMovement))
             _currentBullets.Remove(ballMovement);
     }
+    #endregion
+
+    #region Publics
+    public int AlphaPixels { get { return alphaPixels; } }
     #endregion
 
     #region Privates

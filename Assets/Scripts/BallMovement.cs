@@ -1,4 +1,5 @@
 ﻿using UnityEngine;
+using UnityEngine.Events;
 
 [RequireComponent(typeof(CircleCollider2D))]
 [RequireComponent(typeof(Rigidbody2D))]
@@ -20,7 +21,7 @@ public class BallMovement : MonoBehaviour
     public Rigidbody2D Rigidbody2D { get; private set; } = null;
     public CircleCollider2D CircleCollider2D { get; private set; } = null;
 
-    //private float velocity;
+    public readonly UnityEvent OnStop = new UnityEvent();
 
     //Get variales
     private void Awake()
@@ -32,8 +33,16 @@ public class BallMovement : MonoBehaviour
         this.CircleCollider2D = gameObject.GetComponent<CircleCollider2D>();
         if (!this.CircleCollider2D)
             Debug.LogError(ERROR_NOCIRCLECOLLIDER2D);
+
+        OnStop.Invoke();
     }
 
+
+    private void FixedUpdate()
+    {
+        if (Rigidbody2D != null && Rigidbody2D.velocity == Vector2.zero)
+            OnStop.Invoke();
+    }
     //Cannon Responsability
     /*
     private void Start()
